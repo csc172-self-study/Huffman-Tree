@@ -12,7 +12,7 @@
 using std::string;
 
 int main() {
-	const int NUM_LETTERS = 26;
+	const int NUM_LETTERS = 27;
 	int count = 0;
 	string testString = "this is an example huffman tree string to encode weeeeeeeeeeeeee";
 
@@ -24,7 +24,11 @@ int main() {
 	}
 
 	for (int i = 0; i < stringLength; ++i) {
-		freq[testString[i] - 'a']++;
+		if (testString[i] == ' ') {
+			freq[NUM_LETTERS-1]++;
+		} else {
+			freq[testString[i] - 'a']++;
+		}
 	}
 
 	for (int i = 0; i < NUM_LETTERS; ++i) {
@@ -36,8 +40,14 @@ int main() {
 	int j = 0;
 	for (int i = 0; i < NUM_LETTERS; ++i) {
 		if (freq[i] != 0) {
-			initialArray[j] = new HuffTree<char>((char) (i + 'a'), freq[i]);
-			j++;
+			int letterFreq = freq[i];
+			if (i == 26) {
+				initialArray[j] = new HuffTree<char>(' ', letterFreq);
+				j++;
+			} else {
+				initialArray[j] = new HuffTree<char>((char) (i + 'a'), letterFreq);
+				j++;
+			}
 		}
 	}
 
@@ -45,9 +55,11 @@ int main() {
 
 	constructedTree->createTable("");
 
-	constructedTree->encodeText(testString);
+	string encoded = constructedTree->encodeText(testString);
 
-	//constructedTree->decodeText()
+	cout << "\n\nDecoding string: \n";
+
+	constructedTree->decodeText(encoded);
 
 }
 
