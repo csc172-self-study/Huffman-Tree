@@ -70,27 +70,30 @@ public:
 		}
 	}
 
-	void encodeText(string inputString) {
+	string encodeText(string inputString) {
+		string output = "";
 		for (char& c: inputString) {
 			string code = codeTable.find(c)->second;
-			cout << code;
+			cout << code << std::flush;
+			output += code;
 		}
 		cout << "\nDone encoding.";
+		return output;
 	}
 
 	void decodeText(string inputCode) {
 		HuffNode<E>* curNode = root;
 		for (char& c: inputCode) {
 			if (c == '0') {
-				curNode = curNode->getLeft();
+				if (!curNode->isLeaf()) curNode = ((IntNode<E>*) curNode)->getLeft();
 			} else if (c == '1') {
-				curNode = curNode->getRight();
+				if (!curNode->isLeaf()) curNode = ((IntNode<E>*) curNode)->getRight();
 			} else {
 				throw "Invalid encoding.";
 			}
 
 			if (curNode->isLeaf()) {
-				cout << curNode->element;
+				cout << ((LeafNode<E>*)curNode)->getVal();
 				curNode = root;
 			}
 		}
